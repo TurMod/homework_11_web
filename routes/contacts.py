@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi_limiter.depends import RateLimiter
 from sqlalchemy.orm import Session
 from pydantic import EmailStr
 
@@ -20,7 +21,7 @@ async def get_contacts(name: str | None = None, lastname: str | None = None, ema
         return await repository_contacts.get_contacts_with_nearest_birthday(current_user, db)
     return await repository_contacts.get_contacts(name, lastname, email, current_user, db)
 
-@router.post('/', response_model=ContactResponse)
+@router.post('/', response_model=ContactResponse, description='No more than 4 request per 10 seconds', dependencies=[Depends(RateLimiter(times=4, seconds=10))])
 async def create_contact(body: ContactModel, db: Session = Depends(get_db),
                     current_user: User = Depends(auth_service.get_current_user)):
     return await repository_contacts.create_contact(body, current_user, db)

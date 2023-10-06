@@ -10,6 +10,7 @@ class ContactModel(BaseModel):
     phone_number: PhoneNumber = Field(max_length=30)
     birthday: date
 
+
 class ContactResponse(ContactModel):
     id: int
 
@@ -26,20 +27,24 @@ class UserModel(BaseModel):
 class UserDb(BaseModel):
     id: int
     username: str
-    email : str
-    created_at : datetime
-    avatar : str
+    email: str
+    created_at: datetime
+    avatar: str
 
     class Config:
         from_attributes = True
 
 
 class UserResponse(BaseModel):
-    user : UserDb
-    detail : str = 'User successfully created!'
+    user: UserDb
+    detail: str = 'User successfully created!'
 
 
 class TokenModel(BaseModel):
-    access_token : str
-    refresh_token : str
-    token_type : str = 'bearer'
+    access_token: str
+    refresh_token: str
+    token_type: str = 'bearer'
+
+
+class RequestEmail(BaseModel):
+    email: EmailStr

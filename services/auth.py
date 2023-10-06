@@ -5,6 +5,7 @@ from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 from db.connect_db import get_db
 from repository import users as repository_users
+from conf.config import settings
 
 from typing import Optional
 
@@ -12,8 +13,8 @@ from datetime import datetime, timedelta
 
 class Auth:
     pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
-    SECRET_KEY = 'secret_key'
-    ALGORITHM = 'HS256'
+    SECRET_KEY = settings.secret_key
+    ALGORITHM = settings.algorithm
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/auth/login')
 
     async def verify_password(self, plain_password, hashed_password):
@@ -74,5 +75,21 @@ class Auth:
         if user is None:
             raise credentials_exception
         return user
+
+    async def create_email_token(self, data: dict):
+        to_encode = data.copy()
+        expire = datetime.utcnow() + timedelta(days=7)
+        to_encode.update({'iat': datetime.utcnow(), 'exp': expire})
+        token = jwt.encode(to_encode, self.SECRET_KEY, self.ALGORITHM)
+        return token
+
+    async def get_email_from_token(self, token: str):
+        try:
+            payload = jwt.decode(token, self.SECRET_KEY, algorithms=self.ALGORITHM)
+            email = payload['sub']
+            return email
+        except JWTError as e:
+            print(e)
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail='Invalid token for email verification')
 
 auth_service = Auth()
