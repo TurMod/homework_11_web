@@ -40,15 +40,7 @@ REST API routes Contacts
 .. automodule:: routes.contacts
   :members:
   :undoc-members:
-  :show-inheritance:
-
-
-REST API routes Users
-=========================
-.. automodule:: routes.users
-  :members:
-  :undoc-members:
-  :show-inheritance:
+  :show-inheritance
 
 
 REST API routes Auth

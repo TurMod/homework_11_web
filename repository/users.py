@@ -9,7 +9,9 @@ async def get_user_by_email(email: str, db: Session) -> User:
     Gets user by email address.
 
     :param email: Email address.
+    :type email: str
     :param db: Database session.
+    :type db: Session
     :return: User.
     :rtype: User
     """
@@ -57,11 +59,33 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
     db.commit()
 
 async def confirmed_email(email: str, db: Session) -> None:
+    """
+    Confirms email for specific user.
+
+    :param email: Email address.
+    :type email: str
+    :param db: Database session.
+    :type db: Session
+    :return: None.
+    :rtype: None
+    """
     user = await get_user_by_email(email, db)
     user.confirmed = True
     db.commit()
 
-async def update_avatar(email, url: str, db: Session) -> User:
+async def update_avatar(email: str, url: str, db: Session) -> User:
+    """
+    Updates avatar for specific user.
+
+    :param email: Email address.
+    :type email: str
+    :param url: Cloudinary URL address.
+    :type url: str
+    :param db: Database session.
+    :type db: Session
+    :return: Updated user.
+    :rtype: User
+    """
     user = await get_user_by_email(email, db)
     user.avatar = url
     db.commit()
