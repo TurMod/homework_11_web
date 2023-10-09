@@ -28,20 +28,20 @@ async def create_contact(body: ContactModel, user: User, db: Session) -> Contact
     return contact
 
 
-async def get_contacts(name: str, lastname: str, email: str, user: User, db: Session) -> List[Contact]:
+async def get_contacts(name: str | None, lastname: str | None, email: str | None, user: User, db: Session) -> List[Contact]:
     """
     Gets list of all contacts for specific user.
 
     :param name: First name of the contact (OPTIONAL).
-    :type name: str
+    :type name: str | None
     :param lastname: Last name of the contact (OPTIONAL).
-    :type lastname: str
+    :type lastname: str | None
     :param email: Email address of the contact (OPTIONAL).
-    :type email: str
+    :type email: str | None
     :param user: User for which contacts will retrieve.
-    :type user: User
+    :type user: User | None
     :param db: Database session.
-    :type db: Session
+    :type db: Session | None
     :return: List of contacts.
     :rtype: List[Contact]
     """
